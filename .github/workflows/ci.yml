@@ -31,7 +31,7 @@ jobs:
       # Installer les dépendances Python via pip dans l'environnement Conda
       - name: Installer les dépendances Python
         run: |
-          conda run -n lightfm_env pip install fastapi uvicorn pymysql pandas numpy httpx==0.25.0 python-dotenv pytest
+          conda run -n lightfm_env pip install fastapi uvicorn pymysql pandas numpy httpx==0.25.0 python-dotenv pytest haversine
 
       # Lancer les tests dans l'environnement Conda
       - name: Lancer les tests
