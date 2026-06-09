@@ -1,0 +1,26 @@
+FROM continuumio/miniconda3:latest
+
+WORKDIR /app
+
+#create folder with pkl
+RUN mkdir -p /app/models
+# Copy environment
+COPY environment.yml .
+
+
+#  Supprimer le cache conda dans le Dockerfile
+RUN rm -f /opt/conda/pkgs/cache/*.db /root/.conda/pkgs/cache/*.db 2>/dev/null || true
+
+RUN conda env create -f environment.yml && conda clean -afy
+ENV PATH=/opt/conda/envs/lightfm_env/bin:$PATH
+
+
+# Copy training script 
+COPY train_lightfm.py .
+COPY recommandations_lightfmHistMLFLOW.py .
+
+EXPOSE 8000
+
+#RUN python train_lightfm.py
+#CMD ["python", "recommandations_lightfmHistMLFLOW.py"]
+CMD ["sh", "-c", "python train_lightfm.py && python recommandations_lightfmHistMLFLOW.py"]

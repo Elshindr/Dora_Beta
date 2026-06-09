@@ -1,0 +1,29 @@
+# Base image with conda
+FROM continuumio/miniconda3:latest
+
+WORKDIR /app
+
+
+RUN mkdir /models
+
+COPY environment.yml .
+
+# Create conda env 
+RUN conda env create -f environment.yml && conda clean -afy
+
+# Activate env + Pythonbuffered: Empêche le buffering (logs visibles en direct)
+ENV PATH=/opt/conda/envs/lightfm_env/bin:$PATH PYTHONUNBUFFERED=1
+
+
+# Copier le code et les modèles
+COPY api.py .
+COPY models/lightfm_model_hist.pkl .
+COPY models/dataset.pkl .
+COPY recommandations_lightfmHistMLFLOW.py .
+COPY optimisation_itineraire.py .
+
+
+
+EXPOSE 5000
+# Lancer l'API FastAPI via Uvicorn
+CMD ["sh", "-c", "python api.py && uvicorn api:app --host 0.0.0.0 --port 5000"]

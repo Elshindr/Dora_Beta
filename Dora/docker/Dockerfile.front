@@ -1,0 +1,17 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copier les fichiers de dépendances
+COPY app/front/leaflet-cluster-starter/package*.json ./
+
+# Installer les dépendances
+RUN npm install
+
+# Codes
+COPY app/front/leaflet-cluster-starter/src/ ./src/
+COPY app/front/leaflet-cluster-starter/public/ ./public/
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

@@ -1,0 +1,33 @@
+services:
+  model:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.model
+    environment:
+        MYSQL_HOST: ${MYSQL_HOST}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_DB: ${MYSQL_DB}
+    volumes:
+      - ./models:/app/models
+    ports:
+      - "8000:8000"
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    environment:
+        MYSQL_HOST: ${MYSQL_HOST}
+        MYSQL_USER: ${MYSQL_USER}
+        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+        MYSQL_DB: ${MYSQL_DB}
+    volumes:
+      - ./models:/app/models
+    ports:
+      - "5000:5000"
+  front:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.front
+    ports:
+      - "3000:3000"
