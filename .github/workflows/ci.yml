@@ -5,7 +5,7 @@ on:
     branches: [main, develop]
   push:
     branches:
-      - 'feature/**'
+      - '*'
 
 jobs:
   test-api:

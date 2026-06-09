@@ -34,7 +34,7 @@ def connect_mysql():
 with open("lightfm_model_hist.pkl", "rb") as f:
     model = pickle.load(f)
 
-with open("models/dataset.pkl", "rb") as f:
+with open("dataset.pkl", "rb") as f:
     dataset = pickle.load(f)
 
 print("Modèle LightFM et dataset chargés avec succès")
