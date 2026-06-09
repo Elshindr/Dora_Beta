@@ -36,7 +36,7 @@ jobs:
       # Lancer les tests dans l'environnement Conda
       - name: Lancer les tests
         run: |
-          conda run -n lightfm_env pytest tests/ -v
+          conda run -n lightfm_env pytest tests_api/ -v
         env:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
