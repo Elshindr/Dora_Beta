@@ -33,20 +33,17 @@ jobs:
       # Installer lightfm via Conda
       - name: Installer lightfm
         run: |
-          source $HOME/miniconda/bin/activate lightfm_env
-          conda install -y -c conda-forge lightfm
+          conda run -n lightfm_env conda install -y -c conda-forge lightfm
 
       # Installer les autres dépendances via pip
       - name: Installer les dépendances Python
         run: |
-          source $HOME/miniconda/bin/activate lightfm_env
-          pip install fastapi uvicorn pymysql pandas numpy httpx==0.25.0 python-dotenv pytest
+          conda run -n lightfm_env pip install fastapi uvicorn pymysql pandas numpy httpx==0.25.0 python-dotenv pytest
 
       # Lancer les tests
       - name: Lancer les tests
         run: |
-          source $HOME/miniconda/bin/activate lightfm_env
-          pytest tests/ -v
+          conda run -n lightfm_env pytest tests/ -v
         env:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
