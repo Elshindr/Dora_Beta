@@ -26,7 +26,7 @@ jobs:
       - name: Configurer Conda et installer lightfm
         run: |
           conda create -y -n lightfm_env python=3.9
-          conda install -y -n lightfm_env -c conda-forge lightfm numpy scipy tqdm pymysql pandas
+          conda install -y -n lightfm_env -c conda-forge lightfm numpy scipy tqdm pymysql pandas scikit-learn
 
       # Installer les dépendances Python via pip dans l'environnement Conda
       - name: Installer les dépendances Python
