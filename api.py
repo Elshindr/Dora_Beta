@@ -10,6 +10,7 @@ from optimisation_itineraire import  optimize_itinerary
 import os
 from dotenv import load_dotenv
 load_dotenv()
+
 app = FastAPI(title="Dora Recommendation API")
 
 # === CONFIG DB ===
@@ -33,7 +34,7 @@ def connect_mysql():
 with open("lightfm_model_hist.pkl", "rb") as f:
     model = pickle.load(f)
 
-with open("dataset.pkl", "rb") as f:
+with open("models/dataset.pkl", "rb") as f:
     dataset = pickle.load(f)
 
 print("Modèle LightFM et dataset chargés avec succès")

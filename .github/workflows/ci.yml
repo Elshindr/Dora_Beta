@@ -1,0 +1,62 @@
+name: CI - Tests & Build
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches:
+      - 'feature/**'
+
+jobs:
+  test-api:
+    name: Tests API
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Installer les dépendances
+        run: |
+          pip install fastapi uvicorn pymysql pandas numpy \
+                      lightfm pytest httpx python-dotenv
+
+      - name: Lancer les tests
+        run: pytest tests/ -v
+        env:
+          MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DB: ${{ secrets.MYSQL_DB }}
+
+  build-images:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test-api
+
+    strategy:
+      matrix:
+        include:
+          - service: model
+            dockerfile: docker/Dockerfile.model
+          - service: api
+            dockerfile: docker/Dockerfile.api
+          - service: front
+            dockerfile: docker/Dockerfile.front
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build ${{ matrix.service }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          dockerfile: ${{ matrix.dockerfile }}
+          push: false
+          tags: ${{ matrix.service }}:test
