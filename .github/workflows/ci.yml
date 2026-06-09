@@ -15,17 +15,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-
-      - name: Installer les dépendances
+      # Installer Miniconda
+      - name: Installer Miniconda
         run: |
-          pip install fastapi uvicorn pymysql pandas numpy \
-                      lightfm pytest httpx python-dotenv
+          wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
+          bash miniconda.sh -b -p $HOME/miniconda
+          echo "$HOME/miniconda/bin" >> $GITHUB_PATH
 
+      # Configurer l'environnement Conda
+      - name: Configurer Conda
+        run: |
+          conda update -y conda
+          conda create -y -n lightfm_env python=3.10
+          conda init bash
+          echo "conda activate lightfm_env" >> $GITHUB_ENV
+
+      # Installer lightfm via Conda
+      - name: Installer lightfm
+        run: |
+          source $HOME/miniconda/bin/activate lightfm_env
+          conda install -y -c conda-forge lightfm
+
+      # Installer les autres dépendances via pip
+      - name: Installer les dépendances Python
+        run: |
+          source $HOME/miniconda/bin/activate lightfm_env
+          pip install fastapi uvicorn pymysql pandas numpy httpx==0.25.0 python-dotenv pytest
+
+      # Lancer les tests
       - name: Lancer les tests
-        run: pytest tests/ -v
+        run: |
+          source $HOME/miniconda/bin/activate lightfm_env
+          pytest tests/ -v
         env:
           MYSQL_HOST: ${{ secrets.MYSQL_HOST }}
           MYSQL_USER: ${{ secrets.MYSQL_USER }}
