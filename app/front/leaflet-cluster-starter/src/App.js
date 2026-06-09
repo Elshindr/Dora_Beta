@@ -24,9 +24,9 @@ const defaultIcon = L.icon({
 });
 
 const TRANSPORT_MODES = [
-    { value: 'car', label: '🚗 Voiture' },
-    { value: 'bicycle', label: '🚲 Vélo' },
-    { value: 'foot', label: '🚶 À pied' },
+    { value: 'car', label: ' Voiture' },
+    { value: 'bicycle', label: ' Vélo' },
+    { value: 'foot', label: ' À pied' },
 ];
 
 function App() {
@@ -202,7 +202,7 @@ function App() {
                 <div className="panel-scrollable">
                     {acts.length === 0 ? (
                         <div className="empty-state">
-                            <div className="empty-state-icon">🗺️</div>
+                            
                             <p>Ajoutez des activités depuis la carte</p>
                         </div>
                     ) : (
@@ -248,7 +248,7 @@ function App() {
 
                 <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)' }}>
                     <button className="btn-primary-custom" onClick={onRecommandationIA}>
-                        ✨ Me recommander des activités
+                        Me recommander des activités
                     </button>
                 </div>
             </div>
@@ -259,7 +259,7 @@ function App() {
                     <div className="section-title">Mon itinéraire</div>
                     {dateError && (
                         <p style={{ color: 'var(--danger)', fontSize: 12, marginBottom: 10 }}>
-                            ⚠️ {dateError}
+                             {dateError}
                         </p>
                     )}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
@@ -292,7 +292,7 @@ function App() {
 
                     <button className="btn-primary-custom" onClick={onRecommanderItineraire} disabled={!startDate || !endDate}
                         style={{ opacity: (!startDate || !endDate) ? 0.4 : 1,cursor: (!startDate || !endDate) ? 'not-allowed' : 'pointer',}}>
-                        🗓️ Calculer l'itinéraire
+                        Calculer l'itinéraire
                     </button>
                 </div>
 
@@ -320,7 +320,7 @@ function App() {
                                         </div>
                                         <div style={{ padding: '8px 14px 14px' }}>
                                             <button className="btn-primary-custom" onClick={() => calculateRoute(recoms[key].pois)}>
-                                                🗺️ Voir sur la carte
+                                                Voir sur la carte
                                             </button>
                                         </div>
                                     </Accordion.Body>
@@ -334,12 +334,11 @@ function App() {
             {/* ── AI RECO MODAL ───────────────────── */}
             <Modal show={show} onHide={() => setShow(false)} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>✨ Nos recommandations</Modal.Title>
+                    <Modal.Title>Nos recommandations</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     {aiReco.length === 0 ? (
                         <div className="empty-state">
-                            <div className="empty-state-icon">⏳</div>
                             <p>Chargement…</p>
                         </div>
                     ) : aiReco.map(reco => (
