@@ -1,5 +1,5 @@
 # Dora
-depuis le dossier dora
+depuis le dossier racine
 
 docker-compose up
 ou
@@ -15,20 +15,11 @@ APIs externes et intégrations:
    - POIs:
       - [FourSquare](https://location.foursquare.com/developer/)
       - https://docs.foursquare.com/data-products/docs/categories
-      - [Tripadvisor](https://tripadvisor-content-api.readme.io/reference/overview) ?
-     
-   - Vols, Traffic, transports
-      - [OpenRouteService]()
+      - https://docs.foursquare.com/data-products/docs/access-fsq-os-places
 
-              
    - Méteo
       - [WeatherAPI](https://www.weatherapi.com/)
 
-   - WebScrapping?[budgetyourtrip](https://www.budgetyourtrip.com/france)
-
-
-
-   - foursquare données brutes: https://docs.foursquare.com/data-products/docs/access-fsq-os-places
 
 
 
