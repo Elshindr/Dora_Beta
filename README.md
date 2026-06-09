@@ -17,9 +17,13 @@ APIs externes et intégrations:
       - https://docs.foursquare.com/data-products/docs/categories
       - https://docs.foursquare.com/data-products/docs/access-fsq-os-places
 
-   - Méteo
+   - Méteo  ?
       - [WeatherAPI](https://www.weatherapi.com/)
 
+
+
+# Modele de recommandations
+   - lightfm
 
 
 
