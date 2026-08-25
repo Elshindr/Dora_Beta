@@ -23,6 +23,7 @@ jobs:
       - name: Run les tests
         working-directory: ingestion
         run: |
+          source venv/bin/activate
           pytest tests/ -v
 
   test-api:
