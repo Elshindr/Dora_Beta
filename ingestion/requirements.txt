@@ -1,0 +1,13 @@
+pandas
+pyiceberg
+pyarrow
+requests
+sqlalchemy
+mysql-connector-python
+mysql
+dotenv
+faker
+tqdm
+pymysql
+apache-airflow-providers-docker
+pytest
