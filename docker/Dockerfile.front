@@ -3,15 +3,17 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copier les fichiers de dépendances
-COPY app/front/leaflet-cluster-starter/package*.json ./
+COPY front/package*.json ./
 
 # Installer les dépendances
 RUN npm install
 
 # Codes
-COPY app/front/leaflet-cluster-starter/src/ ./src/
-COPY app/front/leaflet-cluster-starter/public/ ./public/
+COPY front/src/ ./src/
+COPY front/public/ ./public/
+COPY front/metrics-server.js ./
 
 EXPOSE 3000
+EXPOSE 9091
 
-CMD ["npm", "start"]
+CMD ["sh", "-c", "node metrics-server.js & npm start"]

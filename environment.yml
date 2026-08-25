@@ -19,5 +19,4 @@ dependencies:
       - cython
       - haversine
       - python-dotenv
-      - pytest
-      - httpx==0.25.0
+      - prometheus-fastapi-instrumentator

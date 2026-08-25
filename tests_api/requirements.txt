@@ -1,9 +1,0 @@
-fastapi 
-uvicorn 
-pymysql 
-pandas 
-numpy 
-pytest 
-httpx 
-python-dotenv
-haversine

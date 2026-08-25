@@ -1,0 +1,163 @@
+<mxfile host="app.diagrams.net" version="24.0.0">
+  <diagram name="Organigramme Dora Recommandations POI" id="dora-poi-corrige">
+    <mxGraphModel dx="1400" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title -->
+        <mxCell id="title1" value="Organigramme Dora Recommandations POI" style="text;html=1;fontSize=20;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" y="0" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- External sources -->
+        <mxCell id="n1" value="Foursquare API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontColor=#412402;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="180" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n2" value="Github Actions&#10;Push Main" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontColor=#412402;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="260" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n3" value="MySQL (externe)&#10;hors docker-compose" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAEEDA;strokeColor=#BA7517;fontColor=#412402;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="500" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n4" value="Tests Front &amp; API&#10;Build images Docker" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FAECE7;strokeColor=#993C1D;fontColor=#4A1B0C;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="260" y="140" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_n2_n4" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;" edge="1" parent="1" source="n2" target="n4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Container A: Plateforme web + Monitoring -->
+        <mxCell id="n5" value="Docker Compose : Plateforme web + Monitoring" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1F5EE;strokeColor=#0F6E56;fontColor=#04342C;verticalAlign=top;align=left;spacingLeft=15;spacingTop=10;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="660" height="360" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n6" value="Service 1: Entraînement ML" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="70" y="290" width="190" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n7" value="Volume : ml_artefacts / models" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F1EFE8;strokeColor=#888780;fontColor=#444441;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="370" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n8" value="Service 2: FastAPI&#10;port 5000" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="290" width="190" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n9" value="Service 3: Front React&#10;ports 3000 / 9091" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="510" y="290" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n10" value="Service 4: Prometheus&#10;port 9090" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="70" y="460" width="190" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n11" value="Volume : Prometheus data" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F1EFE8;strokeColor=#888780;fontColor=#444441;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="70" y="540" width="190" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n12" value="Service 6: Node Exporter&#10;port 9100" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="290" y="460" width="190" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n13" value="Service 5: Grafana&#10;port 3001" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="510" y="460" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n14" value="Volume : Grafana data" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F1EFE8;strokeColor=#888780;fontColor=#444441;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="510" y="540" width="160" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_n6_n7" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#888780;" edge="1" parent="1" source="n6" target="n7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n9_n8" value="appels API" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n9" target="n8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n8_n3" value="lecture / écriture" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n8" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n10_n11" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#888780;" edge="1" parent="1" source="n10" target="n11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n10_n12" value="scrape" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n10" target="n12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n13_n10" value="datasource" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n13" target="n10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n13_n14" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#888780;" edge="1" parent="1" source="n13" target="n14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Container B: Airflow (corrected) -->
+        <mxCell id="n15" value="Docker Compose : Airflow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEEDFE;strokeColor=#534AB7;fontColor=#26215C;verticalAlign=top;align=left;spacingLeft=15;spacingTop=10;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="740" y="250" width="610" height="420" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n16" value="Postgres (metadata)&#10;healthcheck pg_isready" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="790" y="290" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n17" value="Airflow-init&#10;db migrate + create user" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="290" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n18" value="Airflow webserver&#10;port 8080" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="790" y="390" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n19" value="Airflow scheduler&#10;exécute les DAGs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#5F5E5A;fontColor=#2C2C2A;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="390" width="230" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n20" value="Volumes partagés : dags, logs, plugins, scripts (ro), models, docker.sock" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F1EFE8;strokeColor=#888780;fontColor=#444441;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="490" width="490" height="80" as="geometry" />
+        </mxCell>
+
+        <mxCell id="n21" value="Volume : postgres_airflow_data" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#F1EFE8;strokeColor=#888780;fontColor=#444441;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="790" y="590" width="230" height="50" as="geometry" />
+        </mxCell>
+
+        <mxCell id="e_n16_n17" value="healthy" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n16" target="n17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n17_n18" value="init réussie" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n17" target="n18">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n17_n19" value="init réussie" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n17" target="n19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n18_n20" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#888780;" edge="1" parent="1" source="n18" target="n20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n19_n20" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#888780;" edge="1" parent="1" source="n19" target="n20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n16_n21" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#888780;" edge="1" parent="1" source="n16" target="n21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n19_n3" value="ingestion (scripts)" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n19" target="n3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n1_n19" value="source données POI" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;strokeColor=#5F5E5A;fontSize=10;" edge="1" parent="1" source="n1" target="n19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n20_n7" value="partage volume ./models" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#534AB7;fontSize=10;" edge="1" parent="1" source="n20" target="n7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n4_n5" value="build &amp; deploy" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#993C1D;fontSize=10;" edge="1" parent="1" source="n4" target="n5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_n4_n15" value="build &amp; deploy" style="edgeStyle=orthogonalEdgeStyle;html=1;endArrow=block;dashed=1;strokeColor=#993C1D;fontSize=10;" edge="1" parent="1" source="n4" target="n15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -16,11 +16,10 @@ ENV PATH=/opt/conda/envs/lightfm_env/bin:$PATH PYTHONUNBUFFERED=1
 
 
 # Copier le code et les modèles
-COPY api.py .
-COPY models/lightfm_model_hist.pkl .
-COPY models/dataset.pkl .
-COPY recommandations_lightfmHistMLFLOW.py .
-COPY optimisation_itineraire.py .
+COPY back/api.py .
+COPY models/lightfm_model_hist.pkl models/
+COPY models/dataset.pkl models/. 
+COPY back/optimisation_itineraire.py .
 
 
 
