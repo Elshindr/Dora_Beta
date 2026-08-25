@@ -4,10 +4,27 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main, dev_noeline_beta]
+    branches: [main, dev_beta]
 
 
 jobs:
+  test_ingestion:
+    name: Tests Ingestion
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Installer les dépendances Python
+        working-directory: ingestion
+        run: |
+            python3 -m venv venv
+            source venv/bin/activate 
+            pip install -r requirements.txt
+      - name: Run les tests
+        working-directory: ingestion
+        run: |
+          pytest tests/ -v
+
   test-api:
     name: Tests API
     runs-on: ubuntu-latest
@@ -87,6 +104,7 @@ jobs:
     needs:
       - test-api
       - test-front
+      - test_ingestion
 
     strategy:
       matrix:
