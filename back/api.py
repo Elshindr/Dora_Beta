@@ -9,8 +9,8 @@ from datetime import datetime
 from optimisation_itineraire import optimize_itinerary
 import os
 from dotenv import load_dotenv
-from prometheus_fastapi_instrumentator import Instrumentator 
-from prometheus_client import Counter, Gauge, Histogram 
+from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import Counter, Gauge, Histogram
 
 load_dotenv()
 
@@ -27,14 +27,87 @@ MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
 MYSQL_DB = os.getenv("MYSQL_DB")
 
 
+# Déclaration des métriques
 
-# Déclaration des métriques 
-predictions_total = Counter( "predictions_total", "Nombre total de prédictions", ["model", "status"] ) 
-active_requests = Gauge( "active_requests", "Requêtes en cours de traitement", ["route"] ) 
-inference_duration = Histogram( "inference_duration_seconds", "Durée d'inférence", buckets=[0.01, 0.1, 0.5, 1.0] )
 
-#Instrumentation automatique 
-Instrumentator().instrument(app).expose(app) 
+# Itineraire
+itinerary_total = Counter(
+    "itinerary_optimization_total",
+    "Nombre total d'optimisations d'itinéraire",
+    ["status"],
+)
+
+itinerary_duration = Histogram(
+    "itinerary_optimization_duration_seconds",
+    "Durée d'optimisation des itinéraires",
+    buckets=[0.01, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 30],
+)
+
+itinerary_pois = Histogram(
+    "itinerary_pois_count",
+    "Nombre de POI envoyés à l'optimisation",
+    buckets=[1, 2, 3, 5, 10, 20, 50, 100],
+)
+
+
+# Recommandations
+recommendations_total = Counter(
+    "recommendations_total",
+    "Nombre total de recommandations",
+    ["model", "status"]
+)
+
+recommended_pois_total = Counter(
+    "recommended_pois_total",
+    "Nombre total de POI recommandés",
+    ["model"]
+)
+
+selection_size = Histogram(
+    "recommendation_selection_size",
+    "Nombre de POI sélectionnés par l'utilisateur",
+    buckets=[1, 2, 3, 5, 10, 20, 50]
+)
+
+recommendation_results = Histogram(
+    "recommendation_results",
+    "Nombre de recommandations retournées",
+    buckets=[0, 1, 3, 5, 10, 20]
+)
+
+# Durée du modèle
+model_inference_duration = Histogram(
+    "model_inference_duration_seconds",
+    "Durée du calcul du modèle ML",
+    buckets=[
+        0.001,
+        0.005,
+        0.01,
+        0.025,
+        0.05,
+        0.1,
+        0.25,
+        0.5,
+        1,
+        2,
+        5
+    ]
+)
+
+
+
+# General
+predictions_total = Counter(
+    "predictions_total", "Nombre total de prédictions", ["model", "status"]
+)
+active_requests = Gauge("active_requests", "Requêtes en cours de traitement", ["route"])
+inference_duration = Histogram(
+    "inference_duration_seconds", "Durée d'inférence", buckets=[0.01, 0.1, 0.5, 1.0]
+)
+application_errors_total = Counter("application_errors_total","Nombre d'erreurs applicatives",["endpoint", "error_type"],)
+# Instrumentation automatique
+Instrumentator().instrument(app).expose(app)
+
 
 def connect_mysql():
     return pymysql.connect(
@@ -42,7 +115,7 @@ def connect_mysql():
         user=MYSQL_USER,
         password=MYSQL_PASSWORD,
         database=MYSQL_DB,
-        port=MYSQL_PORT
+        port=MYSQL_PORT,
     )
 
 
@@ -55,17 +128,17 @@ model = None
 try:
     with open("models/lightfm_model_hist.pkl", "rb") as f:
         model = pickle.load(f)
-except :
+except:
     with open("../models/lightfm_model_hist.pkl", "rb") as f:
         model = pickle.load(f)
 dataset = None
 try:
-    
+
     with open("models/dataset.pkl", "rb") as f:
         dataset = pickle.load(f)
-except : 
-        with open("../models/dataset.pkl", "rb") as f:
-            dataset = pickle.load(f)
+except:
+    with open("../models/dataset.pkl", "rb") as f:
+        dataset = pickle.load(f)
 
 print("Modèle LightFM et dataset chargés avec succès")
 
@@ -73,6 +146,7 @@ print("Modèle LightFM et dataset chargés avec succès")
 # =========================================================
 # ======================= SCHEMAS =========================
 # =========================================================
+
 
 class POISelection(BaseModel):
     selected_pois: List[int]
@@ -101,9 +175,10 @@ class ItineraryRequest(BaseModel):
 # ======================== UTILS ML =======================
 # =========================================================
 
+
 def recommander_par_liste(selected_pois, top_n=10):
 
-    item_mapping = dataset.mapping()[2]       # idPoi -> index
+    item_mapping = dataset.mapping()[2]  # idPoi -> index
     reverse_mapping = {v: k for k, v in item_mapping.items()}
     max_index = model.item_embeddings.shape[0]
 
@@ -115,7 +190,7 @@ def recommander_par_liste(selected_pois, top_n=10):
     # -----------------------------------------------------
     conx = connect_mysql()
 
-    placeholders = ','.join(['%s'] * len(selected_pois))
+    placeholders = ",".join(["%s"] * len(selected_pois))
 
     query = f"""
         SELECT pc.idPoi, c.name AS categorie
@@ -137,7 +212,7 @@ def recommander_par_liste(selected_pois, top_n=10):
     # -----------------------------------------------------
     conx = connect_mysql()
 
-    placeholders = ','.join(['%s'] * len(allowed_categories))
+    placeholders = ",".join(["%s"] * len(allowed_categories))
 
     query = f"""
         SELECT DISTINCT pc.idPoi
@@ -191,7 +266,7 @@ def recommander_par_liste(selected_pois, top_n=10):
         filtered.append(i)
 
         if len(filtered) >= top_n:
-            break 
+            break
 
     return [reverse_mapping[i] for i in filtered]
 
@@ -219,7 +294,7 @@ def enrich_pois(poi_ids):
 
     df = pd.read_sql(query, conx)
     conx.close()
-    df['note_moyenne'] = df['note_moyenne'].fillna(3)
+    df["note_moyenne"] = df["note_moyenne"].fillna(3)
     return df.to_dict(orient="records")
 
 
@@ -227,16 +302,17 @@ def enrich_pois(poi_ids):
 # ======================= ENDPOINTS =======================
 # =========================================================
 
+
 @app.get("/health")
 def health():
-    active_requests.labels(route="health").inc() 
-    active_requests.labels(route="health").dec() 
+    active_requests.labels(route="health").inc()
+    active_requests.labels(route="health").dec()
     return {"status": "ok", "model_loaded": True}
 
 
 @app.get("/api/pois")
 def list_pois(limit: int = 50, offset: int = 0):
-    active_requests.labels(route="api/pois").inc() 
+    active_requests.labels(route="api/pois").inc()
     with inference_duration.time():
         conx = connect_mysql()
 
@@ -250,7 +326,7 @@ def list_pois(limit: int = 50, offset: int = 0):
 
         df = pd.read_sql(query, conx)
         conx.close()
-    active_requests.labels(route="api/pois").dec() 
+    active_requests.labels(route="api/pois").dec()
 
     return df.to_dict(orient="records")
 
@@ -258,8 +334,8 @@ def list_pois(limit: int = 50, offset: int = 0):
 @app.get("/api/poi/{poi_id}")
 def get_poi(poi_id: int):
 
-    active_requests.labels(route="api/poi/:id").inc() 
-    with inference_duration.time(): 
+    active_requests.labels(route="api/poi/:id").inc()
+    with inference_duration.time():
         conx = connect_mysql()
 
         query = f"""
@@ -281,15 +357,15 @@ def get_poi(poi_id: int):
 
     if df.empty:
         raise HTTPException(status_code=404, detail="POI non trouvé")
-    active_requests.labels(route="api/poi/:id").dec() 
-    df['note_moyenne'] = df['note_moyenne'].fillna(3)
+    active_requests.labels(route="api/poi/:id").dec()
+    df["note_moyenne"] = df["note_moyenne"].fillna(3)
     return df.iloc[0].to_dict()
 
 
 @app.get("/api/categories")
 def list_categories():
-    active_requests.labels(route="api/categories").inc() 
-    with inference_duration.time(): 
+    active_requests.labels(route="api/categories").inc()
+    with inference_duration.time():
         conx = connect_mysql()
 
         query = "SELECT idCat, name FROM categorie"
@@ -302,8 +378,8 @@ def list_categories():
 
 @app.get("/api/search")
 def search_poi(q: str = Query(..., min_length=2), limit: int = 20):
-    active_requests.labels(route="api/search").inc() 
-    with inference_duration.time(): 
+    active_requests.labels(route="api/search").inc()
+    with inference_duration.time():
         conx = connect_mysql()
 
         query = f"""
@@ -324,7 +400,7 @@ def search_poi(q: str = Query(..., min_length=2), limit: int = 20):
 
 @app.get("/api/user/{user_id}/history")
 def user_history(user_id: int, limit: int = 50):
-    active_requests.labels(route="api/user/:id/history").inc() 
+    active_requests.labels(route="api/user/:id/history").inc()
     with inference_duration.time():
         conx = connect_mysql()
 
@@ -351,51 +427,75 @@ def user_history(user_id: int, limit: int = 50):
 
 @app.post("/api/recommend_from_selection")
 def recommend_from_selection(selection: POISelection):
-    active_requests.labels(route="api/recommend_from_selection").inc() 
+
+    model_name = "lightfm_v1"
+
+    selection_size.observe(len(selection.selected_pois))
+
     try:
+
         with inference_duration.time():
-            recommended_ids = recommander_par_liste(selection.selected_pois, top_n=10)
-            results = enrich_pois(recommended_ids)
-            predictions_total.labels(model="v1", status="success").inc() 
-        active_requests.labels(route="api/recommend_from_selection").dec()
+
+            recommended_ids = recommander_par_liste(
+                selection.selected_pois,
+                top_n=10
+            )
+
+        recommendation_results.observe(len(recommended_ids))
+
+        results = enrich_pois(recommended_ids)
+
+        recommendations_total.labels(
+            model=model_name,
+            status="success"
+        ).inc()
+
         return results
-    except Exception as e: 
-        predictions_total.labels(model="v1", status="error").inc()
-        active_requests.labels(route="api/recommend_from_selection").dec()
-        raise e 
 
+    except Exception as e:
+        print("Raison de l'erreur:"+str(e))
+        recommendations_total.labels(
+            model=model_name,
+            status="error"
+        ).inc()
+
+        application_errors_total.labels(
+            endpoint="/api/recommend_from_selection",
+            error_type=type(e).__name__
+        ).inc()
+
+        raise HTTPException(
+            status_code=500,
+            detail="Erreur lors de la recommandation"
+        )
         
-    
-
-
+        
 @app.get("/api/cats")
 async def get_categories():
-    active_requests.labels(route="api/cats").inc() 
+    active_requests.labels(route="api/cats").inc()
     with inference_duration.time():
         conx = connect_mysql()
 
         with conx.cursor() as cursor:
-            cursor.execute('SELECT name, idCat FROM categorie WHERE isActive=1 ORDER BY name;')
+            cursor.execute(
+                "SELECT name, idCat FROM categorie WHERE isActive=1 ORDER BY name;"
+            )
             res = cursor.fetchall()
 
-
-    active_requests.labels(route="api/cats").dec() 
-    return [
-        {"name": row[0], "idCat": row[1]}
-        for row in res
-    ]
-
+    active_requests.labels(route="api/cats").dec()
+    return [{"name": row[0], "idCat": row[1]} for row in res]
 
 
 @app.get("/api/poisbycats/{idCat}")
 async def get_poi_by_idcat(idCat):
-    active_requests.labels(route="api/poisbycats/:id").inc() 
+    active_requests.labels(route="api/poisbycats/:id").inc()
     try:
         with inference_duration.time():
             conx = connect_mysql()
 
             with conx.cursor() as cursor:
-                cursor.execute("""
+                cursor.execute(
+                    """
                     SELECT p.idPoi, p.idFsq, p.name, p.latitudePoi, p.longitudePoi,
                         p.address, c.name, c.idCat, AVG(a.note)
                     FROM poi p
@@ -404,7 +504,9 @@ async def get_poi_by_idcat(idCat):
                     JOIN avis a ON a.idPoi = p.idPoi
                     WHERE c.idCat=%s
                     GROUP BY p.idPoi
-                """, [idCat])
+                """,
+                    [idCat],
+                )
 
                 res = cursor.fetchall()
 
@@ -420,39 +522,48 @@ async def get_poi_by_idcat(idCat):
                     "address": r[5],
                     "nameCat": r[6],
                     "idCat": r[7],
-                    "note": r[8]
+                    "note": r[8],
                 }
                 for r in res
             ]
     except Exception as e:
-        print("Error in gett_poi_by_idcat:"+str(e))
+        print("Error in gett_poi_by_idcat:" + str(e))
         active_requests.labels(route="api/poisbycats/:id").dec()
         return []
-               
+
 
 @app.post("/api/optimize-itinerary/")
 async def get_optimized_itinerary(request: ItineraryRequest):
-    active_requests.labels(route="api/optimize-itinerary").inc() 
+    active_requests.labels(route="api/optimize-itinerary").inc()
+    itinerary_pois.observe(len(request.pois))
     try:
-         with inference_duration.time():
+        
+        with itinerary_duration.time():
 
-            active_requests.labels(route="api/optimize-itinerary").dec()
-            return optimize_itinerary(
-                start_date=request.start_date,
-                end_date=request.end_date,
-                pois=[poi.dict() for poi in request.pois],
-                max_pois_per_day=request.max_pois_per_day
-            )
+                resp = optimize_itinerary(
+                    start_date=request.start_date,
+                    end_date=request.end_date,
+                    pois=[poi.dict() for poi in request.pois],
+                    max_pois_per_day=request.max_pois_per_day,
+                )
+                itinerary_total.labels(status="success").inc()
+                return resp
 
     except Exception as e:
-        active_requests.labels(route="api/optimize-itinerary").dec()
-        raise HTTPException(status_code=400, detail=str(e))
+        itinerary_total.labels(status="error").inc()
+        application_errors_total.labels(
+                    endpoint="api/optimize-itinerary",
+                    error_type=type(e).__name__
+                ).inc()
+        raise HTTPException(status_code=500, detail=str(e))
 
+    finally:
+        active_requests.labels(route="api/optimize-itinerary").dec()
 
 
 @app.get("/api/avisbypoi/{idPoi}")
 async def get_avis_by_poi(idPoi):
-    active_requests.labels(route="api/avisbypoi/:id").inc() 
+    active_requests.labels(route="api/avisbypoi/:id").inc()
 
     try:
         with inference_duration.time():
@@ -460,34 +571,28 @@ async def get_avis_by_poi(idPoi):
 
             with conx.cursor() as cursor:
                 cursor.execute(
-                    'SELECT idTip, content, note FROM avis WHERE idPoi=%s',
-                    [idPoi]
+                    "SELECT idTip, content, note FROM avis WHERE idPoi=%s", [idPoi]
                 )
 
                 res = cursor.fetchall()
             active_requests.labels(route="api/avisbypoi/:id").dec()
-            return [
-                {"idTip": r[0], "content": r[1], "note": r[2]}
-                for r in res
-            ]
+            return [{"idTip": r[0], "content": r[1], "note": r[2]} for r in res]
     except Exception as e:
         active_requests.labels(route="api/avisbypoi/:id").dec()
         return []
 
-    
-
 
 @app.post("/api/poi_by_ids")
 async def get_list_pois_by_ids(lstPois: POISelectionByIds):
-    active_requests.labels(route="api/poi_by_ids").inc() 
-    try: 
+    active_requests.labels(route="api/poi_by_ids").inc()
+    try:
         with inference_duration.time():
             if not lstPois.lstPois:
                 return []
 
             conx = connect_mysql()
 
-            placeholders = ','.join(['%s'] * len(lstPois.lstPois))
+            placeholders = ",".join(["%s"] * len(lstPois.lstPois))
 
             query = f"""
                 SELECT 
@@ -517,7 +622,7 @@ async def get_list_pois_by_ids(lstPois: POISelectionByIds):
                     "address": r[5],
                     "nameCat": r[6],
                     "idCat": r[7],
-                    "note": r[8]
+                    "note": r[8],
                 }
                 for r in results
             ]
