@@ -1,6 +1,4 @@
 
-[Projet Github](https://elshindr.github.io/Dora_Beta/)
-
 Application d'optimisation d'itineraire et de recommandation IA de POI
 
 Automatisation de l'ingestion des mises à jours
@@ -60,15 +58,3 @@ ou
 - Se rendre à localhost:5000/health pour  le back
 - Se rendre à localhost:9090 pour Prometheus
 - Se rendre à localhost:3001 pour Grafana
-
-
-
-
-
-
-  
-
-  
-
-
-
