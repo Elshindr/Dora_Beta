@@ -1,7 +1,32 @@
 # Dora
-Application Python - React d'optimisation d'itineraire et de recommandation de POI avec le modele ligthfm
+[Projet Github](https://elshindr.github.io/Dora_Beta/)
 
-## Installation
+Application d'optimisation d'itineraire et de recommandation IA de POI
+
+Automatisation de l'ingestion des mises à jours
+
+Monitoring et Dashboarding
+
+
+# Stack Technique
+- Python - FastAPI - SqlAlchemy - Pytest
+- React
+- Prometheus & Grafana
+- Airflow - Docker Compose
+- Faker - LightFm
+
+
+# Sources de données
+   - POI:
+      - [Foursquare](https://location.foursquare.com/developer/)
+      - https://docs.foursquare.com/data-products/docs/categories
+      - https://docs.foursquare.com/data-products/docs/access-fsq-os-places
+              
+   - Méteo:
+      - [WeatherAPI](https://www.weatherapi.com/)
+
+
+# Installation
 - Créer une base de données MySQL
 - Créer un compte Foursquare et récupérer la clé API
 - Renseigner le fichier .env avec
@@ -16,7 +41,7 @@ PATH_MODEL=
 
 - Lancer le pipeline airflow depuis le dossier racine
 ``` 
-docker compose -f docker-compose.airflox.yaml up --build
+docker compose -f docker-compose.airflow.yaml up --build
 ```
 - Atteindre l'endpoint localhost:8080 pour atteindre Airflow
 - Lancer le DAG "Create Database" pour initier la création de la base de données
@@ -38,15 +63,7 @@ ou
 
 
 
-# Liste des sources de données
-APIs externes et intégrations:
-   - POIs:
-      - [FourSquare](https://location.foursquare.com/developer/)
-      - https://docs.foursquare.com/data-products/docs/categories
-      - https://docs.foursquare.com/data-products/docs/access-fsq-os-places
-              
-   - Méteo:
-      - [WeatherAPI](https://www.weatherapi.com/)
+
 
 
   

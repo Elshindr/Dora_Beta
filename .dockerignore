@@ -1,3 +1,0 @@
-airflow/
-airflow/logs/
-**/logs/scheduler/latest

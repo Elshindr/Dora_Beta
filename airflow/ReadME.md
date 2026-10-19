@@ -1,1 +1,0 @@
-docker compose --env-file .dev.env -f docker-compose.airflow.yaml up --build
