@@ -1,4 +1,5 @@
 # Dora
+Application Python - React d'optimisation d'itineraire et de recommandation de POI avec le modele ligthfm
 
 ## Installation
 - Créer une base de données MySQL
